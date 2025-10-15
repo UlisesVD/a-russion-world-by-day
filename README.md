@@ -11,8 +11,10 @@
 
 - 📅 **Palabra diaria automática** - Nueva palabra cada día
 - 🔊 **Pronunciación de audio** - Escucha la pronunciación correcta en ruso
-- � **Compartir como imagen** - Genera y comparte imágenes visuales de las palabras
-- �📱 **Diseño responsivo** - Optimizado para móvil, tablet y desktop
+- 📸 **Compartir como imagen** - Genera y comparte imágenes visuales de las palabras
+- ✍️ **Práctica de escritura** - Escribe la palabra con validación en tiempo real
+- 📊 **Sistema de progreso** - Racha diaria, palabras aprendidas y estadísticas
+- � **Diseño responsivo** - Optimizado para móvil, tablet y desktop
 - 🌙 **Tema oscuro** - Estética minimalista inspirada en el frío ruso
 - 🎨 **Tailwind CSS** - Diseño moderno sin CSS personalizado
 - 📚 **Ejemplos contextuales** - 5 oraciones por palabra
@@ -46,13 +48,17 @@ Abre [http://localhost:5173](http://localhost:5173) en tu navegador.
 ```
 src/
 ├── components/
-│   ├── SpeakButton.tsx         # Botón de audio reutilizable
-│   └── ShareImageButton.tsx    # Botón para compartir imágenes
+│   ├── SpeakButton/            # Botón de audio reutilizable
+│   ├── ShareImageButton/       # Botón para compartir imágenes
+│   ├── ProgressStats/          # Dashboard de estadísticas
+│   ├── LearnedButton/          # Botón marcar como aprendida
+│   └── WritingPractice/        # Componente de práctica de escritura
 ├── data/
 │   └── vocabulary.ts           # Base de datos de palabras
 ├── hooks/
 │   ├── useSpeech.ts            # Hook para síntesis de voz
-│   └── useImageGenerator.ts    # Hook para generar imágenes
+│   ├── useImageGenerator.ts    # Hook para generar imágenes
+│   └── useProgress.ts          # Hook para sistema de progreso
 ├── App.tsx                     # Componente principal
 ├── index.css                   # Tailwind directives
 └── main.tsx                    # Entry point
@@ -130,6 +136,8 @@ utterance.rate = 0.85; // Ajustar entre 0.5 y 2.0
 - [WORD_SYSTEM.md](./WORD_SYSTEM.md) - Guía completa del sistema de palabras
 - [AUDIO_SYSTEM.md](./AUDIO_SYSTEM.md) - Documentación del sistema de audio
 - [IMAGE_SHARE_SYSTEM.md](./IMAGE_SHARE_SYSTEM.md) - Sistema de compartir imágenes
+- [PROGRESS_SYSTEM.md](./PROGRESS_SYSTEM.md) - Sistema de progreso y estadísticas
+- [WRITING_PRACTICE_SYSTEM.md](./WRITING_PRACTICE_SYSTEM.md) - Sistema de práctica de escritura
 
 ## 🌐 Compatibilidad de Navegadores
 

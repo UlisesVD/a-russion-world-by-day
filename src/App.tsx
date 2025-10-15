@@ -1,12 +1,26 @@
 import './App.css'
 import { getWordOfTheDay } from './data/vocabulary'
 import { useEffect, useState } from 'react'
-import { SpeakButton } from './components/SpeakButton'
-import { ShareImageButton } from './components/ShareImageButton'
+import { SpeakButton } from './components/SpeakButton/SpeakButton'
+import { ShareImageButton } from './components/ShereimageButton/ShareImageButton'
+import { useProgress } from './hooks/useProgress'
+import { ProgressStats } from './components/ProgressStats/ProgressStats'
+import { LearnedButton } from './components/LearnedButton/LearnedButton'
+import { WritingPractice } from './components/WritingPractice/WritingPractice'
 
 function App() {
   // Obtener la palabra del día
   const [wordOfTheDay, setWordOfTheDay] = useState(getWordOfTheDay());
+  
+  // Sistema de progreso
+  const {
+    stats,
+    updateStreak,
+    toggleLearned,
+    isLearned,
+    trackWordView,
+    trackWritingAttempt,
+  } = useProgress();
 
   // Verificar si cambió el día cada minuto
   useEffect(() => {
@@ -23,10 +37,25 @@ function App() {
     return () => clearInterval(interval);
   }, [wordOfTheDay]);
 
+  // Actualizar racha y tracking al cargar la palabra del día
+  useEffect(() => {
+    updateStreak();
+    trackWordView(wordOfTheDay.russian);
+  }, [wordOfTheDay.russian, updateStreak, trackWordView]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-blue-900 text-slate-100">
       <div className="container mx-auto px-3 sm:px-4 md:px-6 py-6 sm:py-8 md:py-12 max-w-5xl">
         
+        {/* Estadísticas de Progreso */}
+        <ProgressStats
+          learnedCount={stats.learnedCount}
+          currentStreak={stats.currentStreak}
+          longestStreak={stats.longestStreak}
+          totalWordsViewed={stats.totalWordsViewed}
+          favoriteCount={stats.favoriteCount}
+        />
+
         {/* Header - Palabra del día */}
         <header className="text-center mb-8 sm:mb-10 md:mb-12 space-y-2 sm:space-y-3 md:space-y-4">
           <div className="flex items-center justify-center gap-3 sm:gap-4 mb-2">
@@ -34,6 +63,11 @@ function App() {
               {wordOfTheDay.russian}
             </h1>
             <div className="flex items-center gap-2 sm:gap-3">
+              <LearnedButton
+                isLearned={isLearned(wordOfTheDay.russian)}
+                onToggle={() => toggleLearned(wordOfTheDay.russian)}
+                size="large"
+              />
               <SpeakButton 
                 text={wordOfTheDay.russian} 
                 lang="ru-RU" 
@@ -65,6 +99,23 @@ function App() {
               className="relative rounded-lg shadow-2xl w-full object-cover h-48 sm:h-64 md:h-80 border border-slate-700"
             />
           </div>
+        </div>
+
+        {/* Práctica de Escritura */}
+        <div className="mb-8 sm:mb-12 md:mb-16 max-w-2xl mx-auto px-2">
+          <WritingPractice
+            word={wordOfTheDay.russian}
+            transliteration={wordOfTheDay.transliteration}
+            onSuccess={() => {
+              // Marcar automáticamente como aprendida al escribir correctamente
+              if (!isLearned(wordOfTheDay.russian)) {
+                toggleLearned(wordOfTheDay.russian);
+              }
+            }}
+            onAttempt={(correct) => {
+              trackWritingAttempt(wordOfTheDay.russian, correct);
+            }}
+          />
         </div>
 
         {/* Tabla de ejemplos */}
