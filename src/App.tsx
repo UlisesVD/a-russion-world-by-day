@@ -7,6 +7,7 @@ import { useProgress } from './hooks/useProgress'
 import { ProgressStats } from './components/ProgressStats/ProgressStats'
 import { LearnedButton } from './components/LearnedButton/LearnedButton'
 import { WritingPractice } from './components/WritingPractice/WritingPractice'
+import { PronunciationPractice } from './components/PronunciationPractice/PronunciationPractice'
 
 function App() {
   // Obtener la palabra del día
@@ -20,6 +21,7 @@ function App() {
     isLearned,
     trackWordView,
     trackWritingAttempt,
+    trackPronunciationAttempt,
   } = useProgress();
 
   // Verificar si cambió el día cada minuto
@@ -114,6 +116,23 @@ function App() {
             }}
             onAttempt={(correct) => {
               trackWritingAttempt(wordOfTheDay.russian, correct);
+            }}
+          />
+        </div>
+
+        {/* Práctica de Pronunciación */}
+        <div className="mb-8 sm:mb-12 md:mb-16 max-w-2xl mx-auto px-2">
+          <PronunciationPractice
+            word={wordOfTheDay.russian}
+            transliteration={wordOfTheDay.transliteration}
+            onSuccess={() => {
+              // Marcar automáticamente como aprendida al pronunciar correctamente
+              if (!isLearned(wordOfTheDay.russian)) {
+                toggleLearned(wordOfTheDay.russian);
+              }
+            }}
+            onAttempt={(correct, similarity) => {
+              trackPronunciationAttempt(wordOfTheDay.russian, correct, similarity);
             }}
           />
         </div>

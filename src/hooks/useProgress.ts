@@ -9,6 +9,7 @@ export interface UserProgress {
   viewHistory: { [word: string]: number }; // Contador de veces vista cada palabra
   favoriteExamples: string[]; // IDs de ejemplos favoritos (word:index)
   writingPractice: { [word: string]: { attempts: number; successes: number } }; // Tracking de práctica de escritura
+  pronunciationPractice: { [word: string]: { attempts: number; successes: number; averageScore: number; bestScore: number } }; // Tracking de práctica de pronunciación
 }
 
 const STORAGE_KEY = 'russian-word-progress';
@@ -22,6 +23,7 @@ const getDefaultProgress = (): UserProgress => ({
   viewHistory: {},
   favoriteExamples: [],
   writingPractice: {},
+  pronunciationPractice: {},
 });
 
 const getTodayDate = (): string => {
@@ -223,6 +225,41 @@ export function useProgress() {
     });
   }, []);
 
+  // Trackear intento de práctica de pronunciación
+  const trackPronunciationAttempt = useCallback((word: string, correct: boolean, score: number) => {
+    setProgress((prev) => {
+      const newPronunciationPractice = { ...prev.pronunciationPractice };
+      
+      if (!newPronunciationPractice[word]) {
+        newPronunciationPractice[word] = { 
+          attempts: 0, 
+          successes: 0, 
+          averageScore: 0, 
+          bestScore: 0 
+        };
+      }
+      
+      const current = newPronunciationPractice[word];
+      current.attempts++;
+      
+      if (correct) {
+        current.successes++;
+      }
+      
+      // Actualizar puntuación promedio
+      const totalScore = current.averageScore * (current.attempts - 1) + score;
+      current.averageScore = totalScore / current.attempts;
+      
+      // Actualizar mejor puntuación
+      current.bestScore = Math.max(current.bestScore, score);
+
+      return {
+        ...prev,
+        pronunciationPractice: newPronunciationPractice,
+      };
+    });
+  }, []);
+
   // Calcular estadísticas
   const stats = {
     learnedCount: progress.learnedWords.size,
@@ -244,6 +281,7 @@ export function useProgress() {
     toggleFavoriteExample,
     isFavoriteExample,
     trackWritingAttempt,
+    trackPronunciationAttempt,
     resetProgress,
   };
 }

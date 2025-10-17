@@ -147,7 +147,7 @@ export function WritingPractice({
       {/* Instrucciones */}
       <div className="bg-slate-900/50 border border-slate-600 rounded-lg p-4">
         <p className="text-sm text-slate-300 mb-2">
-          Escribe la palabra en ruso usando el teclado cirílico o la transliteración:
+          Escribe la palabra en ruso usando el teclado cirílico:
         </p>
         <div className="flex items-center gap-2 text-lg">
           <span className="text-blue-300 font-semibold">Transliteración:</span>

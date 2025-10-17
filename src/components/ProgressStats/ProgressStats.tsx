@@ -48,24 +48,46 @@ export function ProgressStats({
   ];
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-8 sm:mb-10">
-      {stats.map((stat, index) => (
-        <div
-          key={index}
-          className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-lg p-4 text-center hover:bg-slate-800/70 transition-colors duration-200"
-        >
-          <div className="text-3xl mb-2">{stat.icon}</div>
-          <div className={`text-2xl sm:text-3xl font-bold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent mb-1`}>
-            {stat.value}
-          </div>
-          <div className="text-xs sm:text-sm text-slate-400">
-            {stat.suffix}
-          </div>
-          <div className="text-xs text-slate-500 mt-1">
-            {stat.label}
+    <>
+      {/* Vista móvil - Compacta horizontal */}
+      <div className="block sm:hidden mb-4">
+        <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-lg p-3 mx-2">
+          <div className="flex justify-between items-center text-center">
+            {stats.map((stat, index) => (
+              <div key={index} className="flex-1">
+                <div className="text-sm mb-1">{stat.icon}</div>
+                <div className={`text-base font-bold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}>
+                  {stat.value}
+                </div>
+                <div className="text-xs text-slate-400 leading-tight">
+                  {stat.label}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-      ))}
-    </div>
+      </div>
+
+      {/* Vista desktop - Grid completo */}
+      <div className="hidden sm:grid sm:grid-cols-4 gap-4 mb-10">
+        {stats.map((stat, index) => (
+          <div
+            key={index}
+            className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-lg p-4 text-center hover:bg-slate-800/70 transition-colors duration-200"
+          >
+            <div className="text-3xl mb-2">{stat.icon}</div>
+            <div className={`text-3xl font-bold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent mb-1`}>
+              {stat.value}
+            </div>
+            <div className="text-sm text-slate-400">
+              {stat.suffix}
+            </div>
+            <div className="text-xs text-slate-500 mt-1">
+              {stat.label}
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
